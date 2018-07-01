@@ -9,25 +9,26 @@ using CountingKs.Models;
 
 namespace CountingKs.Controllers
 {
-    public abstract class BaseApiController : ApiController
+  public abstract class BaseApiController : ApiController
+  {
+    private ModelFactory _modelFactory;
+    protected ICountingKsRepository CountingKsRepository { get; }
+
+
+    protected BaseApiController(ICountingKsRepository countingKsRepository)
     {
-      private ModelFactory _modelFactory;
+      CountingKsRepository = countingKsRepository;
+    }
 
-      protected BaseApiController(ICountingKsRepository countingKsRepository)
+
+    public ModelFactory ModelFactory
+    {
+      get
       {
-        CountingKsRepository = countingKsRepository;
+        if (_modelFactory == null) _modelFactory = new ModelFactory(this.Request, this.CountingKsRepository);
+
+        return _modelFactory;
       }
-
-      public ICountingKsRepository CountingKsRepository { get; }
-
-      public ModelFactory ModelFactory
-      {
-        get
-        {
-          if(_modelFactory == null) _modelFactory =  new ModelFactory(this.Request);
-
-          return _modelFactory;
-        }
-      }
+    }
   }
 }
