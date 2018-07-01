@@ -20,9 +20,16 @@ namespace CountingKs.Controllers
       _repository = repository;
       _modelFactory= new ModelFactory();
     }
-    public IEnumerable<FoodModel> Get()
+    public IEnumerable<FoodModel> Get(bool includeMeasures = true)
     {
-      var results = _repository.GetAllFoodsWithMeasures()
+      IQueryable<Food> query;
+
+      if (includeMeasures)
+        query = _repository.GetAllFoodsWithMeasures();
+      else
+        query = _repository.GetAllFoods();
+
+      var results = query
         .OrderBy(x => x.Description)
         .Take(25)
         .ToList()
@@ -30,9 +37,9 @@ namespace CountingKs.Controllers
       return results;
     }
 
-    public FoodModel Get(int id)
+    public FoodModel Get(int foodId)
     {
-      return _modelFactory.Create(_repository.GetFood(id));
+      return _modelFactory.Create(_repository.GetFood(foodId));
     }
   }
 }
