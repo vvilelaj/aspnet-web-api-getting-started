@@ -24,10 +24,15 @@ namespace CountingKs.Controllers
       return CountingKsRepository.GetDiaries(userName).ToList().Select( d => ModelFactory.Create(d));
     }
 
-    public DiaryModel Get(DateTime diaryId)
+    public HttpResponseMessage Get(DateTime diaryId)
     {
       var userName = _identityService.CurrentUser;
-      return ModelFactory.Create( CountingKsRepository.GetDiary(userName,diaryId));
+      var diary = CountingKsRepository.GetDiary(userName, diaryId);
+
+      if (diary == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+
+      return Request.CreateResponse(HttpStatusCode.OK,
+          ModelFactory.Create(CountingKsRepository.GetDiary(userName, diaryId)));
     }
   }
 }
