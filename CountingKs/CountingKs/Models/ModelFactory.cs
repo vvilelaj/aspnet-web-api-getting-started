@@ -82,7 +82,7 @@ namespace CountingKs.Models
       var food = Create(diaryEntry.FoodItem);
       return new DiaryEntryModel
       {
-        Url = _urlHelper.Link("DiaryEntry", new { diaryId = diaryEntry.Diary.CurrentDate.ToString("yyyy-MM-dd"), entrieid = diaryEntry.Id }),
+        Url = _urlHelper.Link("DiaryEntries", new { diaryId = diaryEntry.Diary.CurrentDate.ToString("yyyy-MM-dd"), entryid = diaryEntry.Id }),
         Quantity = diaryEntry.Quantity,
         MeasureUrl = measure.Url,
         MeasureDescription = measure.Description,

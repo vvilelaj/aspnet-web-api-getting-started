@@ -35,28 +35,5 @@ namespace CountingKs.Controllers
       return Request.CreateResponse(HttpStatusCode.OK,
           ModelFactory.Create(CountingKsRepository.GetDiary(userName, diaryId)));
     }
-
-    public HttpResponseMessage Post(DateTime diaryId, [FromBody] DiaryEntryModel diaryEntry)
-    {
-      try
-      {
-        var entry = ModelFactory.Parse(diaryEntry);
-
-        if (entry == null) return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "error in request body");
-
-        var diary = CountingKsRepository.GetDiary(_identityService.CurrentUser, diaryId);
-        if (diary == null) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "diary does not exist");
-
-        diary.Entries.Add(entry);
-        CountingKsRepository.SaveAll();
-        diaryEntry = ModelFactory.Create(entry);
-
-        return Request.CreateResponse(HttpStatusCode.Created, diaryEntry);
-      }
-      catch (Exception ex)
-      {
-        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-      }
-    }
   }
 }
