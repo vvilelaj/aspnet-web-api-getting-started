@@ -29,5 +29,10 @@ namespace CountingKs.Controllers
         .Select(f => _modelFactory.Create(f));
       return results;
     }
+
+    public FoodModel Get(int id)
+    {
+      return _modelFactory.Create(_repository.GetFood(id));
+    }
   }
 }
