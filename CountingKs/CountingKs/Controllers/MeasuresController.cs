@@ -9,25 +9,20 @@ using CountingKs.Models;
 
 namespace CountingKs.Controllers
 {
-  public class MeasuresController : ApiController
+  public class MeasuresController : BaseApiController
   {
-    private readonly ICountingKsRepository _repository;
-    private readonly ModelFactory _modelFactory;
-
-    public MeasuresController(ICountingKsRepository repository)
+    public MeasuresController(ICountingKsRepository repository):base(repository)
     {
-      _repository = repository;
-      _modelFactory = new ModelFactory();
     }
     public IEnumerable<MeasureModel> Get(int foodId)
     {
-      return _repository.GetMeasuresForFood(foodId).ToList().Select(m => _modelFactory.Create(m));
+      return CountingKsRepository.GetMeasuresForFood(foodId).ToList().Select(m => ModelFactory.Create(m));
     }
     public MeasureModel Get(int foodId, int id)
     {
-      var measure = _repository.GetMeasure(id);
+      var measure = CountingKsRepository.GetMeasure(id);
 
-      if (measure.Food.Id == foodId) return _modelFactory.Create(measure);
+      if (measure.Food.Id == foodId) return ModelFactory.Create(measure);
 
       return null;
     }

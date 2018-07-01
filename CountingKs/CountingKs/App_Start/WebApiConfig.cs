@@ -11,7 +11,7 @@ namespace CountingKs
     public static void Register(HttpConfiguration config)
     {
       config.Routes.MapHttpRoute(
-          name: "Food",
+          name: "Foods",
           routeTemplate: "api/nutrition/{controller}/{foodId}",
           defaults: new { Controller="foods", foodId = RouteParameter.Optional }
       );
