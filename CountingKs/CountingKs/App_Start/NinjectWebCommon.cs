@@ -1,3 +1,6 @@
+using System.Web.Http;
+using WebApiContrib.IoC.Ninject;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(CountingKs.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(CountingKs.App_Start.NinjectWebCommon), "Stop")]
 
@@ -44,6 +47,9 @@ namespace CountingKs.App_Start
       {
         kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
         kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+        // support to webapi
+        GlobalConfiguration.Configuration.DependencyResolver = new NinjectResolver(kernel);
 
         RegisterServices(kernel);
         return kernel;
