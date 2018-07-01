@@ -11,24 +11,16 @@ namespace CountingKs.Controllers
 {
   public class FoodsController : ApiController
   {
+    private ICountingKsRepository _repository;
+
+    public FoodsController(ICountingKsRepository repository)
+    {
+      _repository = repository;
+    }
     public IEnumerable<Food> Get()
     {
-
-      try
-      {
-        using (var context = new CountingKsContext())
-        {
-          var repo = new CountingKsRepository(context);
-
-          var results = repo.GetAllFoods().OrderBy(x => x.Description).Take(25).ToList();
-
-          return results;
-        }
-      }
-      catch (Exception ex)
-      {
-        return null;
-      }
+      var results = _repository.GetAllFoods().OrderBy(x => x.Description).Take(25).ToList();
+      return results;
     }
   }
 }
