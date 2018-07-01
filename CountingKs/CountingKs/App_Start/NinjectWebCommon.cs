@@ -1,4 +1,5 @@
 using System.Web.Http;
+using CountingKs.Services;
 using WebApiContrib.IoC.Ninject;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(CountingKs.App_Start.NinjectWebCommon), "Start")]
@@ -69,6 +70,8 @@ namespace CountingKs.App_Start
     {
       kernel.Bind<ICountingKsRepository>().To<CountingKsRepository>();
       kernel.Bind<CountingKsContext>().To<CountingKsContext>();
+      kernel.Bind<ICountingKsIdentityService>().To<CountingKsIdentityService>();
+
     }
   }
 }

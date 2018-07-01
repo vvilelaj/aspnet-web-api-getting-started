@@ -4,13 +4,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http.Routing;
+using CountingKs.Controllers;
 using CountingKs.Data.Entities;
 
 namespace CountingKs.Models
 {
   public class ModelFactory
   {
-    private UrlHelper _urlHelper;
+    private readonly UrlHelper _urlHelper;
 
     public ModelFactory(HttpRequestMessage request)
     {
@@ -35,6 +36,15 @@ namespace CountingKs.Models
         Description = measure.Description,
         Calories = measure.Calories
       };
+    }
+
+    internal DiaryModel Create(Diary diary)
+    {
+      return new DiaryModel
+      {
+        Url = _urlHelper.Link("Diaries", new { diaryId = diary.CurrentDate.ToString("yyyy-MM-dd") }),
+        CurrentDate = diary.CurrentDate
+  };
     }
   }
 }
