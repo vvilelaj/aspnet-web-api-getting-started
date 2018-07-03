@@ -92,5 +92,32 @@ namespace CountingKs.Controllers
         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
       }
     }
+
+    [HttpPut]
+    [HttpPatch]
+    public HttpResponseMessage Patch(DateTime diaryId, int entryId, [FromBody] DiaryEntryModel diaryEntry)
+    {
+      try
+      {
+        if (diaryId == default(DateTime))
+          throw new ArgumentException(nameof(diaryId));
+
+        if (entryId == default(int))
+          throw new ArgumentException(nameof(entryId));
+
+        var entryTmp = ModelFactory.Parse(diaryEntry);
+        var entry = CountingKsRepository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
+
+        entry.Quantity = entryTmp.Quantity;
+
+        CountingKsRepository.SaveAll();
+
+        return Request.CreateResponse(HttpStatusCode.OK);
+      }
+      catch (Exception ex)
+      {
+        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+      }
+    }
   }
 }
