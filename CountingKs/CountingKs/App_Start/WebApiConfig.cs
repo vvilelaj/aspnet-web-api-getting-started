@@ -31,7 +31,7 @@ namespace CountingKs
       config.Routes.MapHttpRoute(
         name: "DiaryEntries",
         routeTemplate: "api/user/diaries/{diaryid}/entries/{entryid}",
-        defaults: new { Controller = "diaryEntries", entrieid = RouteParameter.Optional }
+        defaults: new { Controller = "diaryEntries", entryid = RouteParameter.Optional }
       );
 
       // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
