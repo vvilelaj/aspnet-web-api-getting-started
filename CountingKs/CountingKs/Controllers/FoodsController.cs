@@ -12,24 +12,37 @@ namespace CountingKs.Controllers
 {
   public class FoodsController : BaseApiController
   {
+    private readonly int PAGE_SIZE_DEFAULT = 10;
+
     public FoodsController(ICountingKsRepository repository):base(repository)
     {
     }
-    public IEnumerable<FoodModel> Get(bool includeMeasures = true)
+    public HttpResponseMessage Get(bool includeMeasures = true,int pageIndex = 0,int pageSize =0)
     {
       IQueryable<Food> query;
+      if (pageIndex < 0) pageIndex = 0;
+
+      if (pageSize <= 0) pageSize = PAGE_SIZE_DEFAULT;
 
       if (includeMeasures)
         query = CountingKsRepository.GetAllFoodsWithMeasures();
       else
         query = CountingKsRepository.GetAllFoods();
 
-      var results = query
-        .OrderBy(x => x.Description)
-        .Take(25)
+      query = query.OrderBy(x => x.Description);
+
+      var totalRows = query.Count();
+      
+      var result = query
+        .Skip(pageIndex * pageSize)
+        .Take(pageSize)
         .ToList()
         .Select(f => ModelFactory.Create(f));
-      return results;
+
+      var pagedResult =
+        ModelFactory.CreatePagedResult(includeMeasures, pageIndex, pageSize, totalRows, result, Request);
+
+      return Request.CreateResponse(HttpStatusCode.OK, pagedResult);
     }
 
     public FoodModel Get(int foodId)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http.Routing;
@@ -87,6 +88,29 @@ namespace CountingKs.Models
         MeasureUrl = measure.Url,
         MeasureDescription = measure.Description,
         FoodDescription = food.Description
+      };
+    }
+
+    public PagedResult<IEnumerable<FoodModel>> CreatePagedResult(bool includeMeasures, int pageIndex, int pageSize, int totalRows, 
+      IEnumerable<FoodModel> result, HttpRequestMessage request)
+    {
+      var totalPages = (int) Math.Ceiling((double) totalRows / pageSize);
+
+      var urlHelper = new UrlHelper(request);
+      var prevUrl = string.Empty;
+      if (pageIndex > 0) prevUrl = urlHelper.Link("Foods", new {includeMeasures, pageIndex = pageIndex - 1, pageSize});
+
+      var nextUrl = string.Empty;
+      if (pageIndex < totalPages) nextUrl = urlHelper.Link("Foods", new { includeMeasures, pageIndex = pageIndex + 1, pageSize });
+
+      return new PagedResult<IEnumerable<FoodModel>>()
+      {
+        PageIndex = pageIndex,
+        TotalRows = totalRows,
+        TotalPages = totalPages,
+        PrevUrl = prevUrl,
+        NextUrl = nextUrl,
+        Result = result
       };
     }
   }
