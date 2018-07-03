@@ -64,5 +64,33 @@ namespace CountingKs.Controllers
         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
       }
     }
+
+    public HttpResponseMessage Delete(DateTime diaryId, int entryId)
+    {
+      try
+      {
+        if (diaryId == default(DateTime))
+          return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "diaryId incorrect");
+
+        if (entryId == default(int))
+          return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "entryId incorrect");
+
+        var entry = CountingKsRepository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
+
+        if (entry == null) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "entry not found");
+
+        CountingKsRepository.DeleteDiaryEntry(entry.Id);
+
+        var result = CountingKsRepository.SaveAll();
+
+        if (result) return Request.CreateResponse(HttpStatusCode.OK);
+
+        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "can not delete");
+      }
+      catch (Exception ex)
+      {
+        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+      }
+    }
   }
 }
